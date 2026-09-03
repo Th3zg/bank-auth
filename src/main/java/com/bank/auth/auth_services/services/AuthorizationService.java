@@ -1,0 +1,2 @@
+@services
+public class AuthorizationService {}

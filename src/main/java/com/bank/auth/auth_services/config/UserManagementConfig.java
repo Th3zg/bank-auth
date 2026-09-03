@@ -24,4 +24,14 @@ public class UserManagementConfig {
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder(12);
   }
+
+//  @Bean
+//  protected MethodSecurityExpressionHandler createExpressionHandler() {
+//    var expressionHandler =
+//            new DefaultMethodSecurityExpressionHandler();
+//
+//    expressionHandler.setPermissionEvaluator(evaluator);
+//
+//    return expressionHandler;
+//  }
 }
