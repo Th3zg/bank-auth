@@ -27,19 +27,19 @@ public class SecurityUserDetailsService implements UserDetailsService {
             .get()
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    List<Role> roles = roleRepositoryImpl.findRoleByUserId(authUser.getId()).get();
+    List<Role> roles = roleRepositoryImpl.findRoleByUserId(authUser.id()).get();
     List<SimpleGrantedAuthority> authorities = roles.stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
             .toList();
 
     return User.builder()
-            .username(authUser.getUsername())
-            .password(authUser.getPassword())
+            .username(authUser.username())
+            .password(authUser.password())
             .authorities(authorities)
-            .accountLocked(!authUser.isAccountNonLocked())
+            .accountLocked(!authUser.accountNonLocked())
             .accountExpired(!authUser.isAccountNonExpired())
-            .credentialsExpired(!authUser.isCredentialsNonExpired())
-            .disabled(authUser.getStatus().equals(UserStatus.ACTIVE))
+            .credentialsExpired(!authUser.credentialsNonExpired())
+            .disabled(authUser.status().equals(UserStatus.ACTIVE))
             .build();
   }
 }
