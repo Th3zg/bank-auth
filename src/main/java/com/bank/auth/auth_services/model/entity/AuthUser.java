@@ -5,26 +5,20 @@ import lombok.*;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Builder
-@Getter
-@Setter
-@AllArgsConstructor
-public class AuthUser {
-  private final Long id;
-  private final Long externalUserId;
-  private final String username;
-  private final String email;
-  private final String password;
-  private final String status;
-  private final boolean accountNonLocked;
-  private final boolean credentialsNonExpired;
-  private final boolean emailVerified;
-  private final boolean twoFactorEnable;
-  private final boolean isAccountNonExpired;
-  private final OffsetDateTime lastLoginAt;
-  private final OffsetDateTime lastPasswordChangeAt;
-  private final int userTypeId;
-  private final List<UserRole> roles;
-
+public record AuthUser(Long id, 
+                       Long externalUserId, 
+                       String username,
+                       String email,
+                       String password,
+                       String status,
+                       boolean accountNonLocked,
+                       boolean credentialsNonExpired,
+                       boolean emailVerified,
+                       boolean twoFactorEnable,
+                       boolean isAccountNonExpired,
+                       OffsetDateTime lastLoginAt,
+                       OffsetDateTime lastPasswordChangeAt,
+                       int userTypeId,
+                       List<UserRole> roles) {
 }
