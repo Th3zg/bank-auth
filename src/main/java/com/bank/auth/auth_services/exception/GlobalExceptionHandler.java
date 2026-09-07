@@ -30,6 +30,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest()
             .body(ErrorResponse.from(
                     AuthErrorCode.FIELD_VALIDATION_FAILED.getStatus(),
+                    AuthErrorCode.FIELD_VALIDATION_FAILED.getMessage(),
                     AuthErrorCode.FIELD_VALIDATION_FAILED,
                     errors,
                     null
@@ -44,9 +45,10 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
             .body(ErrorResponse.from(
                     HttpStatus.SERVICE_UNAVAILABLE.value(),
+                    AuthErrorCode.DATABASE_ERROR.getMessage(),
                     AuthErrorCode.DATABASE_ERROR,
-                    Set.of("Service unavailable, please try again later")
-            ));
+                    "Service unavailable, please try again later")
+            );
   }
 
   // Any other uncontrolled error
@@ -57,8 +59,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorResponse.from(
                     AuthErrorCode.INTERNAL_ERROR.getStatus(),
+                    AuthErrorCode.INTERNAL_ERROR.getMessage(),
                     AuthErrorCode.INTERNAL_ERROR,
-                    Set.of("An unexpected error occurred")
+                    ("An unexpected error occurred")
             ));
   }
 }
