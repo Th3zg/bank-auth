@@ -1,8 +1,8 @@
 package com.bank.auth.auth_services.repository;
 
-import com.bank.auth.auth_services.model.entity.Role;
+import com.bank.auth.auth_services.model.entity.CatalogsRole;
 import com.bank.auth.auth_services.repository.interfaces.RoleRepository;
-import com.bank.auth.auth_services.repository.rowMapper.RoleRowMapper;
+import com.bank.auth.auth_services.repository.rowMapper.CatalogsRoleRowMapper;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,15 +15,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoleRepositoryImpl implements RoleRepository {
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-  private final RoleRowMapper roleRowMapper;
+  private final CatalogsRoleRowMapper roleRowMapper;
 
   @Override
-  public Try<List<Role>> findRoleByUserId(Long userId) {
+  public Try<List<CatalogsRole>> findRoleByUserId(Long userId) {
     String sql = """
             SELECT r.role_id, r.name, r.description
             FROM auth.auth_user_roles usr
             JOIN catalogs.roles r ON r.role_id = usr.role_id
-            WHERE ur.auth_user_id = :userId
+            WHERE usr.auth_user_id = :userId
             """;
 
     Map<String, Object> params = Map.of("userId", userId);
