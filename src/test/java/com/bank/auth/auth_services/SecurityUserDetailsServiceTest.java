@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,5 +60,10 @@ public class SecurityUserDetailsServiceTest {
 
     assertNotNull(result);
     assertEquals("Télios", result.getUsername());
+    //assertEquals("Telios@gamil.com", result.
+    assertEquals("hashed-password", result.getPassword());
+
+    verify(authUserRepository).findByUserName("Télios");
+
   }
 }

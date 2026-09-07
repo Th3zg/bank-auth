@@ -1,5 +1,6 @@
 package com.bank.auth.auth_services.model.entity;
 
+import com.bank.auth.auth_services.enums.UserStatus;
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -12,7 +13,7 @@ public record AuthUser(
         String username,
         String email,
         String password,
-        String status,
+        UserStatus status,
         boolean accountNonLocked,
         boolean credentialsNonExpired,
         boolean emailVerified,
