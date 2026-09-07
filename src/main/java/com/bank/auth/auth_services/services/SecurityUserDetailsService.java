@@ -2,7 +2,7 @@ package com.bank.auth.auth_services.services;
 
 import com.bank.auth.auth_services.enums.UserStatus;
 import com.bank.auth.auth_services.model.entity.AuthUser;
-import com.bank.auth.auth_services.model.entity.Role;
+import com.bank.auth.auth_services.model.entity.CatalogsRole;
 import com.bank.auth.auth_services.repository.AuthUserRepositoryImpl;
 import com.bank.auth.auth_services.repository.RoleRepositoryImpl;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,9 @@ public class SecurityUserDetailsService implements UserDetailsService {
             .get()
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    List<Role> roles = roleRepositoryImpl.findRoleByUserId(authUser.id()).get();
+    List<CatalogsRole> roles = roleRepositoryImpl.findRoleByUserId(authUser.id()).get();
     List<SimpleGrantedAuthority> authorities = roles.stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name().toUpperCase()))
             .toList();
 
     return User.builder()
