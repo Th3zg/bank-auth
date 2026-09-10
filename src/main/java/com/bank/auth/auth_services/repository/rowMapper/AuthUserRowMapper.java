@@ -1,5 +1,6 @@
 package com.bank.auth.auth_services.repository.rowMapper;
 
+import com.bank.auth.auth_services.enums.UserStatus;
 import com.bank.auth.auth_services.model.entity.AuthUser;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -17,7 +18,7 @@ public class AuthUserRowMapper implements RowMapper<AuthUser> {
             rs.getString("username"),
             rs.getString("email"),
             rs.getString("password"),
-            rs.getString("status"),
+            UserStatus.valueOf(rs.getString("status")),
             rs.getBoolean("account_non_locked"),
             rs.getBoolean("credentials_non_expired"),
             rs.getBoolean("email_verified"),

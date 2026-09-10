@@ -1,5 +1,6 @@
 package com.bank.auth.auth_services.repository.rowMapper;
 
+import com.bank.auth.auth_services.enums.RoleCode;
 import com.bank.auth.auth_services.model.entity.CatalogsRole;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -12,7 +13,7 @@ public class CatalogsRoleRowMapper implements RowMapper<CatalogsRole> {
   public CatalogsRole mapRow(ResultSet rs, int rowNum) throws SQLException {
     return new CatalogsRole(
             rs.getLong("role_id"),
-            rs.getString("code"),
+            RoleCode.valueOf(rs.getString("code")),
             rs.getString("name"),
             rs.getString("description"),
             rs.getBoolean("active"),

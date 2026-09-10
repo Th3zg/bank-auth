@@ -39,7 +39,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
             .accountLocked(!authUser.accountNonLocked())
             .accountExpired(!authUser.isAccountNonExpired())
             .credentialsExpired(!authUser.credentialsNonExpired())
-            .disabled(authUser.status().equals(UserStatus.ACTIVE))
+            .disabled(authUser.status().equals(UserStatus.INACTIVE))
             .build();
   }
 }

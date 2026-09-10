@@ -33,7 +33,7 @@ public class SecurityAuthUser implements UserDetails {
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles.stream()
             .map(role -> new SimpleGrantedAuthority(
-                    "ROLE_" + role.code().toUpperCase()
+                    "ROLE_" + role.code().value()
             )).toList();
   }
 
