@@ -1,6 +1,9 @@
 package com.bank.auth.auth_services;
 
+import com.bank.auth.auth_services.enums.RoleCode;
+import com.bank.auth.auth_services.enums.UserStatus;
 import com.bank.auth.auth_services.model.entity.AuthUser;
+import com.bank.auth.auth_services.model.entity.CatalogsRole;
 import com.bank.auth.auth_services.repository.AuthUserRepositoryImpl;
 import com.bank.auth.auth_services.repository.RoleRepositoryImpl;
 import com.bank.auth.auth_services.services.SecurityUserDetailsService;
@@ -10,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -38,7 +42,7 @@ public class SecurityUserDetailsServiceTest {
             .username("Télios")
             .email("Telios@gamil.com")
             .password("hashed-password")
-            .status("ACTIVE")
+            .status(UserStatus.ACTIVE)
             .accountNonLocked(true)
             .credentialsNonExpired(true)
             .emailVerified(true)
@@ -50,20 +54,99 @@ public class SecurityUserDetailsServiceTest {
             .roles(List.of())
             .build();
 
+    CatalogsRole customerBasic = CatalogsRole.builder()
+            .roleId(1L)
+            .code(RoleCode.CUSTOMER_BASIC)
+            .build();
+
     when(authUserRepository.findByUserName("Télios"))
             .thenReturn(Try.success((Optional.of(authUser))));
 
     when(roleRepository.findRoleByUserId(1L))
-            .thenReturn(Try.success(List.of()));
+            .thenReturn(Try.success(List.of(customerBasic)));
 
     UserDetails result = userDetailsService.loadUserByUsername("Télios");
 
     assertNotNull(result);
     assertEquals("Télios", result.getUsername());
-    //assertEquals("Telios@gamil.com", result.
     assertEquals("hashed-password", result.getPassword());
+    assertEquals(1, result.getAuthorities().size());
+    assertTrue(result.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER_BASIC")));
+    assertTrue(result.isAccountNonLocked());
+    assertTrue(result.isAccountNonExpired());
+    assertTrue(result.isCredentialsNonExpired());
+    assertTrue(result.isEnabled());
 
     verify(authUserRepository).findByUserName("Télios");
+    verify(roleRepository).findRoleByUserId(1L);
+  }
 
+  @Test
+  void shouldLoadUserWithMultipleRoles() {
+    AuthUser authUser = AuthUser.builder()
+            .id(1L)
+            .externalUserId(100L)
+            .username("Télios")
+            .email("Telios@gamil.com")
+            .password("hashed-password")
+            .status(UserStatus.ACTIVE)
+            .accountNonLocked(true)
+            .credentialsNonExpired(true)
+            .emailVerified(true)
+            .twoFactorEnable(false)
+            .isAccountNonExpired(true)
+            .lastLoginAt(null)
+            .lastPasswordChangeAt(null)
+            .userTypeId(1)
+            .roles(List.of())
+            .build();
+
+    CatalogsRole customerBasic = CatalogsRole.builder()
+            .roleId(1L)
+            .code(RoleCode.CUSTOMER_BASIC)
+            .build();
+
+    CatalogsRole employeeAnalyst = CatalogsRole.builder()
+            .roleId(2L)
+            .code(RoleCode.EMPLOYEE_ANALYST)
+            .build();
+
+    CatalogsRole employeeCompliance = CatalogsRole.builder()
+            .roleId(3L)
+            .code(RoleCode.EMPLOYEE_COMPLIANCE)
+            .build();
+
+    when(authUserRepository.findByUserName("Télios"))
+            .thenReturn(Try.success(Optional.of(authUser)));
+
+    when(roleRepository.findRoleByUserId(1L))
+            .thenReturn(Try.success(List.of(
+                    customerBasic,
+                    employeeAnalyst,
+                    employeeCompliance
+            )));
+
+    UserDetails result = userDetailsService.loadUserByUsername("Télios");
+
+    assertNotNull(result);
+    assertEquals("Télios", result.getUsername());
+    assertEquals("hashed-password", result.getPassword());
+    assertEquals(3, result.getAuthorities().size());
+    assertTrue(result.getAuthorities().contains(
+            new SimpleGrantedAuthority("ROLE_CUSTOMER_BASIC")
+    ));
+    assertTrue(result.getAuthorities().contains(
+            new SimpleGrantedAuthority("ROLE_EMPLOYEE_ANALYST")
+    ));
+    assertTrue(result.getAuthorities().contains(
+            new SimpleGrantedAuthority("ROLE_EMPLOYEE_COMPLIANCE")
+    ));
+    assertTrue(result.isAccountNonLocked());
+    assertTrue(result.isAccountNonExpired());
+    assertTrue(result.isCredentialsNonExpired());
+    assertTrue(result.isEnabled());
+
+    verify(authUserRepository).findByUserName("Télios");
+    verify(roleRepository).findRoleByUserId(1L);
   }
 }
