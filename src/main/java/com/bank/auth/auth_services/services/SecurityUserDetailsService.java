@@ -29,7 +29,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     List<CatalogsRole> roles = roleRepositoryImpl.findRoleByUserId(authUser.id()).get();
     List<SimpleGrantedAuthority> authorities = roles.stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name().toUpperCase()))
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.code().value()))
             .toList();
 
     return User.builder()
